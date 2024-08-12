@@ -2,7 +2,7 @@ export type MockServerData = {
   title: string[],
   type: string[],
   city: string[],
-  descriptions: string[],
+  description: string[],
   goods: string[],
   users: [],
   emails: []

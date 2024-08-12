@@ -6,7 +6,7 @@ import {
   generateRandomValue,
   getRandomItem,
   getRandomItems
-} from '../../halpers/index.js';
+} from '../../helpers/index.js';
 
 const MIN_PRICE = 100;
 const MAX_PRICE = 1000;
@@ -25,7 +25,7 @@ const MAX_BEDROOMS = 10;
 const MIN_ADULTS = 1;
 const MAX_ADULTS = 10;
 
-export class TsvOfferGenerator implements OfferGenerator {
+export class TSVOfferGenerator implements OfferGenerator {
   constructor(private readonly mockData: MockServerData) {
   }
 
@@ -36,21 +36,21 @@ export class TsvOfferGenerator implements OfferGenerator {
     const cityName = getRandomItem<string>(this.mockData.city);
     const cityLocationLatitude = generateRandomValue(MIN_LATITUDE, MAX_LATITUDE, LOCATION_AFTER_DIGITS).toString();
     const cityLocationLongitude = generateRandomValue(MIN_LONGITUDE, MAX_LONGITUDE, LOCATION_AFTER_DIGITS).toString();
-    const cityLocationZoom = generateRandomValue(MIN_ZOOM, MAX_ZOOM);
+    const cityLocationZoom = generateRandomValue(MIN_ZOOM, MAX_ZOOM).toString();
     const locationLatitude = generateRandomValue(MIN_LATITUDE, MAX_LATITUDE, LOCATION_AFTER_DIGITS).toString();
     const locationLongitude = generateRandomValue(MIN_LONGITUDE, MAX_LONGITUDE, LOCATION_AFTER_DIGITS).toString();
-    const locationZoom = generateRandomValue(MIN_ZOOM, MAX_ZOOM);
-    const isFavorite = generateRandomBoolean();
-    const isPremium = generateRandomBoolean();
-    const rating = generateRandomValue(MIN_RATING, MAX_RATING);
-    const descriptions = getRandomItem<string>(this.mockData.descriptions);
-    const images = generateImagesPaths().join(', ');
+    const locationZoom = generateRandomValue(MIN_ZOOM, MAX_ZOOM).toString();
+    const isFavorite = generateRandomBoolean().toString();
+    const isPremium = generateRandomBoolean().toString();
+    const rating = generateRandomValue(MIN_RATING, MAX_RATING).toString();
+    const description = getRandomItem<string>(this.mockData.description);
+    const images = generateImagesPaths().join(',');
     const previewImage = generatePreviewImagePath();
-    const goods = getRandomItems<string>(this.mockData.goods).join(', ');
+    const goods = getRandomItems<string>(this.mockData.goods).join(',');
     const userName = getRandomItem<string>(this.mockData.users);
     const userIsPro = generateRandomBoolean();
     const userEmail = getRandomItem<string>(this.mockData.emails);
-    const userToken = '';
+    const userToken = 'vdgfh';
     const bedrooms = generateRandomValue(MIN_BEDROOMS, MAX_BEDROOMS);
     const maxAdults = generateRandomValue(MIN_ADULTS, MAX_ADULTS);
 
@@ -58,7 +58,7 @@ export class TsvOfferGenerator implements OfferGenerator {
       title, type, price, cityName,
       cityLocationLatitude, cityLocationLongitude, cityLocationZoom, locationLatitude,
       locationLongitude, locationZoom, isFavorite, isPremium,
-      rating, descriptions, images, previewImage,
+      rating, description, images, previewImage,
       goods, userName, userIsPro, userEmail,
       userToken, bedrooms, maxAdults
     ].join('\t');

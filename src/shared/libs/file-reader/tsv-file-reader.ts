@@ -41,8 +41,8 @@ export class TSVFileReader implements FileReader {
           longitude: Number(locationLongitude),
           zoom: Number(locationZoom)
         },
-        isFavorite: isFavorite === 'TRUE',
-        isPremium: isPremium === 'TRUE',
+        isFavorite: isFavorite === 'true',
+        isPremium: isPremium === 'true',
         rating: Number(rating),
         description,
         images: images.split(','),
