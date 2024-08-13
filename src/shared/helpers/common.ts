@@ -34,3 +34,7 @@ export function generateImagesPaths() {
   }
   return previousValues.map((value) => `${HOTEL_IMAGE_PATH}${value}.jpg`);
 }
+
+export function getErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : '';
+}
