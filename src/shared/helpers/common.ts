@@ -1,4 +1,4 @@
-import {HOTEL_IMAGE_PATH, MAX_IMAGES_AMOUNT, MAX_IMAGES_ARRAY_LENGTH} from '../const/index.js';
+import {HOST_AVATAR_PATH, HOTEL_IMAGE_PATH, MAX_IMAGES_AMOUNT, MAX_IMAGES_ARRAY_LENGTH} from '../const/index.js';
 
 export function generateRandomValue(min: number, max: number, numAfterDigit = 0) {
   return +((Math.random() * (max - min)) + min).toFixed(numAfterDigit);
@@ -21,6 +21,10 @@ export function generateRandomBoolean(): boolean {
 export function generatePreviewImagePath() {
   const imageNumber = generateRandomValue(0, Math.floor(Math.random() * 4));
   return `${HOTEL_IMAGE_PATH}${imageNumber}.jpg`;
+}
+export function generateAvatarPath() {
+  const imageNumber = generateRandomValue(0, Math.floor(Math.random() * 4));
+  return `${HOST_AVATAR_PATH}${imageNumber}.jpg`;
 }
 
 export function generateImagesPaths() {
