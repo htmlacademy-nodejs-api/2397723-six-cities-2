@@ -26,6 +26,8 @@ const MAX_BEDROOMS = 10;
 const MIN_ADULTS = 1;
 const MAX_ADULTS = 10;
 
+
+
 export class TSVOfferGenerator implements OfferGenerator {
   constructor(private readonly mockData: MockServerData) {
   }

@@ -4,4 +4,4 @@ export * from './city.type.js';
 export * from './offer.type.js';
 export * from './offer-type.enum.js';
 export * from './offer-good.enum.js';
-export * from './mock-servar-data.type.js';
+export * from './mock-server-data.type.js';
