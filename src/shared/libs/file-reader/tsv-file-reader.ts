@@ -1,62 +1,36 @@
 import {FileReader} from './file-reader.interface.js';
-import {readFileSync} from 'node:fs';
-import {Offer, OfferGood, OfferType} from '../../types/index.js';
+import EventEmitter from 'node:events';
+import {createReadStream} from 'node:fs';
 
-export class TSVFileReader implements FileReader {
-  private rawData = '';
+const CHUNK_SIZE = 16384;
 
-  constructor(
-    private readonly filename: string
-  ) {
+export class TSVFileReader extends EventEmitter implements FileReader {
+  constructor(private readonly filename: string) {
+    super();
   }
 
-  public read(): void {
-    this.rawData = readFileSync(this.filename, {encoding: 'utf-8'});
-  }
+  public async read(): Promise<void> {
+    const readStream = createReadStream(this.filename, {
+      highWaterMark: CHUNK_SIZE,
+      encoding: 'utf-8',
+    });
 
-  public toArray(): Offer[] {
-    if (!this.rawData) {
-      throw new Error('File was not read');
+    let remainingData = '';
+    let nextLinePosition = -1;
+    let importedRowCount = 0;
+
+    for await (const chunk of readStream) {
+      remainingData += chunk.toString();
+
+      while ((nextLinePosition = remainingData.indexOf('\n')) >= 0) {
+        const completeRow = remainingData.slice(0, nextLinePosition + 1);
+        remainingData = remainingData.slice(++nextLinePosition);
+        importedRowCount++;
+
+        this.emit('line', completeRow);
+      }
     }
 
-    return this.rawData
-      .split('\n')
-      .filter((row) => row.trim().length > 0)
-      .map((line) => line.split('\t'))
-      .map(([title, type, price, cityName, cityLocationLatitude, cityLocationLongitude, cityLocationZoom, locationLatitude, locationLongitude, locationZoom, isFavorite, isPremium, rating, description, images, previewImage, goods, userName, userAvatar, userIsPro, userEmail, userToken, bedrooms, maxAdults]) => ({
-        id: '1',
-        title,
-        type: OfferType[type as 'apartment' | 'house' | 'room' | 'hotel'],
-        price: Number(price),
-        city: {
-          name: cityName,
-          location: {
-            latitude: Number(cityLocationLatitude),
-            longitude: Number(cityLocationLongitude),
-            zoom: Number(cityLocationZoom)
-          },
-        },
-        location: {
-          latitude: Number(locationLatitude),
-          longitude: Number(locationLongitude),
-          zoom: Number(locationZoom)
-        },
-        isFavorite: isFavorite === 'TRUE',
-        isPremium: isPremium === 'TRUE',
-        rating: Number(rating),
-        description,
-        images: images.split(','),
-        previewImage,
-        goods: goods.split(',').map((good) => OfferGood[good.trim() as 'Breakfast' | 'Air conditioning' | 'Laptop friendly workspace' | 'Baby seat' | 'Washer' | 'Towels' | 'Fridge']),
-        host: {
-          name: userName,
-          avatarUrl: userAvatar,
-          isPro: userIsPro === 'TRUE',
-          email: userEmail,
-          token: userToken
-        },
-        bedrooms: Number(bedrooms),
-        maxAdults: Number(maxAdults)
-      }));
+    this.emit('end', importedRowCount);
   }
 }
