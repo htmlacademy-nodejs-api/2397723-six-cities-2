@@ -6,3 +6,4 @@ export * from './offer-type.enum.js';
 export * from './offer-good.enum.js';
 export * from './mock-server-data.type.js';
 export * from './good.union-type.js';
+export * from './component.enum.js';
