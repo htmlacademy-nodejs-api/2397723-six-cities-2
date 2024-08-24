@@ -1,4 +1,5 @@
-import {Offer, OfferGood, OfferType} from '../types/index.js';
+import {Offer, OfferGood, OfferType, Goods} from '../types/index.js';
+
 
 export function createOffer(offerData: string): Offer {
   const [
@@ -64,7 +65,7 @@ export function createOffer(offerData: string): Offer {
     description,
     images: images.split(','),
     previewImage,
-    goods: goods.split(',').map((good) => OfferGood[good.trim() as 'Breakfast' | 'Air conditioning' | 'Laptop friendly workspace' | 'Baby seat' | 'Washer' | 'Towels' | 'Fridge']),
+    goods: goods.split(',').map((good) => OfferGood[good.trim() as Goods]),
     host,
     bedrooms: Number(bedrooms),
     maxAdults: Number(maxAdults)
