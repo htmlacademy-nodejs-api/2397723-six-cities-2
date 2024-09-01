@@ -28,11 +28,13 @@ export class MongoDatabaseClient implements DatabaseClient {
       throw new Error('MongoDB client already connected');
     }
 
-    this.logger.info('Trying to connect to MongoDB…');
+    this.logger.info('Trying to connect to MongoDB...');
 
     let attempt = 0;
     while (attempt < RETRY_COUNT) {
       try {
+        this.mongoose = await Mongoose.connect(uri);
+        this.isConnected = true;
         this.logger.info('Database connection established.');
         return;
       } catch (error) {
@@ -41,10 +43,6 @@ export class MongoDatabaseClient implements DatabaseClient {
         await setTimeout(RETRY_TIMEOUT);
       }
     }
-
-    this.mongoose = await Mongoose.connect(uri);
-    this.isConnected = true;
-
     throw new Error(`Unable to establish database connection after ${RETRY_COUNT}`);
   }
 
