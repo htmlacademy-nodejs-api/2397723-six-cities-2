@@ -1,4 +1,4 @@
-import {setLogLevel, defaultClasses, getModelForClass, modelOptions} from '@typegoose/typegoose';
+import {setLogLevel, defaultClasses, getModelForClass, modelOptions, prop} from '@typegoose/typegoose';
 import { User } from '../../types/index.js';
 import {createSHA256} from '../../helpers/index.js';
 
@@ -16,6 +16,8 @@ export interface UserEntity extends defaultClasses.Base {}
 })
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class UserEntity extends defaultClasses.TimeStamps implements User {
+
+  @prop({unique: true, default: ''})
   public name: string;
 
   public avatarUrl: string;
