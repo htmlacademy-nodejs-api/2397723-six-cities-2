@@ -5,7 +5,6 @@ import {OfferType} from './offer-type.enum.js';
 import {OfferGood} from './offer-good.enum.js';
 
 export type Offer = {
-  id: string;
   title: string;
   type: OfferType;
   price: number;

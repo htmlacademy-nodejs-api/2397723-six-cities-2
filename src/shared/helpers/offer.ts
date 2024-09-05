@@ -53,7 +53,6 @@ export function createOffer(offerData: string): Offer {
   };
 
   return {
-    id: '1',
     title,
     type: OfferType[type as 'apartment' | 'house' | 'room' | 'hotel'],
     price: Number(price),
