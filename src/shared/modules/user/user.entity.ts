@@ -1,8 +1,6 @@
-import {setLogLevel, defaultClasses, getModelForClass, modelOptions, prop} from '@typegoose/typegoose';
+import {defaultClasses, getModelForClass, modelOptions, prop} from '@typegoose/typegoose';
 import { User } from '../../types/index.js';
 import {createSHA256} from '../../helpers/index.js';
-
-setLogLevel('debug');
 
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
@@ -17,19 +15,19 @@ export interface UserEntity extends defaultClasses.Base {}
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class UserEntity extends defaultClasses.TimeStamps implements User {
 
-  @prop({required: true, unique: true, default: '', type: () => String})
+  @prop({required: true, type: () => String})
   public name: string;
 
-  @prop({required: true, unique:true, default: '', type: () => String})
+  @prop({required: true, type: () => String})
   public avatarUrl: string;
 
-  @prop({required: true, unique:true, default: '', type: () => Boolean})
+  @prop({required: true,type: () => Boolean})
   public isPro: boolean;
 
-  @prop({required: true, unique:true, default: '', type: () => String})
+  @prop({required: true, unique:true, type: () => String})
   public email: string;
 
-  @prop({required: true, unique:true, default: '', type: () => String})
+  @prop({required: true,type: () => String})
   public token: string;
 
   @prop({required: true, unique:true, default: '', type: () => String})
