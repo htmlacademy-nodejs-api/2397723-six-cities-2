@@ -1,5 +1,5 @@
 import {setLogLevel, defaultClasses, getModelForClass, modelOptions, prop, Ref} from '@typegoose/typegoose';
-import {City, Location, OfferGood, OfferType} from '../../types/index.js';
+import {City, Location, OfferGood} from '../../types/index.js';
 import {UserEntity} from '../user/index.js';
 
 setLogLevel('debug');
@@ -21,16 +21,16 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({required: true, unique: true, default: '', type: () => String})
   public title: string;
 
-  @prop({required: true, type: () => OfferType})
-  public type: OfferType;
+  @prop({required: true, type: () => String})
+  public type: string;
 
-  @prop({required: true, minlength: 100, maxlength: 100000, type: () => Number})
+  @prop({required: true, type: () => Number})
   public price: number;
 
-  @prop({required: true})
+  @prop({required: true, type: () => Object})
   public city: City;
 
-  @prop({required: true})
+  @prop({required: true, type: () => Object})
   public location: Location;
 
   @prop({required: true, type: () => Boolean})
@@ -51,7 +51,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({required: true, type: () => String})
   public previewImage: string;
 
-  @prop({required: true, type: () => OfferGood})
+  @prop({required: true, type: () => String})
   public goods: OfferGood[];
 
   @prop({required: true, ref: () => UserEntity, type: () => String})
