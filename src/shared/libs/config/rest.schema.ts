@@ -3,7 +3,6 @@ import validator from 'convict-format-with-validator';
 
 convict.addFormats(validator);
 
-
 export type RestSchema = {
   PORT: number;
   SALT: string;
@@ -25,7 +24,7 @@ export const configRestSchema = convict<RestSchema>({
     doc: 'Salt for password hash',
     format: String,
     env: 'SALT',
-    default: null
+    default: 'secretnyi secret'
   },
   DB_HOST: {
     doc: 'IP address of the database server (MongoDB)',

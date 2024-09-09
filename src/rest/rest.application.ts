@@ -1,7 +1,8 @@
+import {inject, injectable} from 'inversify';
+
 import { Logger } from '../shared/libs/logger/index.js';
 import {Config, RestSchema} from '../shared/libs/config/index.js';
 import {Component} from '../shared/types/index.js';
-import {inject, injectable} from 'inversify';
 import {DatabaseClient} from '../shared/libs/database-client/index.js';
 import {getMongoURI} from '../shared/helpers/index.js';
 
@@ -24,7 +25,6 @@ export class RestApplication {
 
     return this.databaseClient.connect(mongoUri);
   }
-
 
   public async init() {
     this.logger.info('Application initialization');

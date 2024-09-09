@@ -1,6 +1,5 @@
 import {Offer, OfferGood, OfferType, Goods} from '../types/index.js';
 
-
 export function createOffer(offerData: string): Offer {
   const [
     title,
