@@ -1,6 +1,5 @@
 import {Offer, OfferGood, OfferType, Goods} from '../types/index.js';
 
-
 export function createOffer(offerData: string): Offer {
   const [
     title,
@@ -53,7 +52,6 @@ export function createOffer(offerData: string): Offer {
   };
 
   return {
-    id: '1',
     title,
     type: OfferType[type as 'apartment' | 'house' | 'room' | 'hotel'],
     price: Number(price),
