@@ -1,9 +1,10 @@
 import {defaultClasses, getModelForClass, modelOptions, prop} from '@typegoose/typegoose';
-import { User } from '../../types/index.js';
+import {User} from '../../types/index.js';
 import {createSHA256} from '../../helpers/index.js';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export interface UserEntity extends defaultClasses.Base {}
+export interface UserEntity extends defaultClasses.Base {
+}
 
 @modelOptions({
   schemaOptions: {
@@ -20,16 +21,16 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   @prop({required: true, type: () => String})
   public avatarUrl: string;
 
-  @prop({required: true,type: () => Boolean})
+  @prop({required: true, type: () => Boolean})
   public isPro: boolean;
 
-  @prop({required: true, unique:true, type: () => String})
+  @prop({required: true, unique: true, type: () => String})
   public email: string;
 
-  @prop({required: true,type: () => String})
+  @prop({required: true, type: () => String})
   public token: string;
 
-  @prop({required: true, unique:true, default: '', type: () => String})
+  @prop({required: true, unique: true, default: '', type: () => String})
   private password?: string;
 
   constructor(userData: User) {
