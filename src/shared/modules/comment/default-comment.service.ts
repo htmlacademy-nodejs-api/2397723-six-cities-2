@@ -16,6 +16,26 @@ export class DefaultCommentService implements CommentService {
 
   public async create(dto: CreateCommentDto): Promise<DocumentType<CommentEntity>> {
     const result = await this.commentModel.create(dto);
+
+    await this.commentModel
+      .aggregate([
+        {
+          $group: {
+            _id: null,
+            averageRating: {$avg: '$rating'},
+          },
+          $lookup: {
+            from: 'offers',
+            pipeline: [
+              {$match: {_id: '$offerId'}},
+              {$project: {rating: '$averageRating'}}
+            ],
+            as: 'offer',
+          },
+          $unset: 'averageRating',
+        }
+      ]);
+
     this.logger.info(`New comment created: ${dto.text}`);
 
     return result;
@@ -24,6 +44,6 @@ export class DefaultCommentService implements CommentService {
   public async findByOfferId(offerId: string): Promise<DocumentType<CommentEntity>[]> {
     return this.commentModel
       .find({offerId})
-      .populate('authorId');
+      .populate(['authorId']);
   }
 }
