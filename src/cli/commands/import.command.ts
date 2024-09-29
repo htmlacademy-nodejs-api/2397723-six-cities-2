@@ -58,7 +58,8 @@ export class ImportCommand implements Command {
       goods: offer.goods,
       hostId: user.id,
       bedrooms: offer.bedrooms,
-      maxAdults: offer.maxAdults
+      maxAdults: offer.maxAdults,
+      commentCount: offer.commentCount
     });
 
   }

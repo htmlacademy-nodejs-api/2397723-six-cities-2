@@ -20,4 +20,5 @@ export type Offer = {
   host: User;
   bedrooms: number;
   maxAdults: number;
+  commentCount: number;
 }
