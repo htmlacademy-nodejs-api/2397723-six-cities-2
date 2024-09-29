@@ -1,0 +1,349 @@
+openapi: 3.1.0
+info:
+  title: API сервер для проекта «Шесть городов».
+  description: |-
+    * Список ресурсов и маршрутов сервера «Шесть городов».
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 2.0.0
+tags:
+  - name: users
+    description: Действия с пользователями.
+  - name: offers
+    description: Действия с предложениями по аренде.
+  - name: favorites
+    description: Действия с избранными предложениями по аренде.
+  - name: comments
+    description: Действия с комментариями.
+
+paths:
+  /users/register:
+    post:
+      tags:
+        - users
+      summary: Регистрация пользователя
+      description: Создает нового пользователя.
+
+      requestBody:
+        description: Информация для создания нового пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yml#/createUser'
+        required: true
+
+        responses:
+          "201":
+            description: Пользователь зарегистрирован. Объект пользователя.
+            content:
+              application/json:
+                schema:
+                  $ref: './schemas.yml#/user'
+
+          "409":
+            description: Пользователь с таким email уже существует.
+
+  /users/login:
+    post:
+      tags:
+        - users
+      summary: Авторизация пользователя
+      description: Позволяет пользователю войти в закрытую часть приложения.
+
+      requestBody:
+        description: Информация для авторизации пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yml#/loginUser'
+        required: true
+
+        responses:
+          "201":
+            description: Авторизация успешна. Объект пользователя.
+            content:
+              application/json:
+                schema:
+                  $ref: './schemas.yml#/user'
+
+          "409":
+            description: Пользователя с таким email не существует.
+
+          "400":
+            description: Неверный пароль.
+
+    get:
+      tags:
+        - users
+      summary: Проверка состояния авторизации пользователя.
+      description: Возвращает информацию по авторизованному пользователю.
+
+      requestBody:
+        description: Авторизационный токен пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yml#/authUser'
+        required: true
+
+        responses:
+          "201":
+            description: Пользователь авторизован.
+            content:
+              application/json:
+                schema:
+                  $ref: './schemas.yml#/user'
+
+          "409":
+            description: Пользователь не авторизован.
+
+  /users/logout:
+    post:
+      tags:
+        - users
+      summary: Завершение сеанса
+      description: Завершает пользовательский сеанс.
+
+      requestBody:
+        description: Авторизационный токен пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yml#/authUser'
+        required: true
+
+        responses:
+          "201":
+            description: Сеанс завершен.
+
+          "400":
+            description: Неизвестная ошибка.
+
+  /offers:
+    get:
+      tags:
+        - offers
+      summary: Список предложений по аренде
+      description: Возвращает список всех предложений по аренде.
+
+      responses:
+        "201":
+          description: Список предложений
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: './schemas.yml#/offer'
+
+    post:
+      tags:
+        - offers
+      summary: Создание нового предложения по аренде
+      description: Создает новое предложение по аренде.
+
+      requestBody:
+        description: Объект предложения
+
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yml#/fullOffer'
+        required: true
+
+      responses:
+        "201":
+          description: Созданное предложение
+          content:
+            application/json:
+              schema:
+                $ref: './schemas.yml#/fullOffer'
+
+
+  /offers/{offerId}:
+    get:
+      tags:
+        - offers
+      summary: Детальная информация по предложению
+      description: Возвращает детальную информацию по предложению.
+
+      responses:
+        "201":
+          description: Предложение по аренде
+          content:
+            application/json:
+              schema:
+                $ref: './schemas.yml#/fullOffer'
+
+    post:
+      tags:
+        - offers
+      summary: Редактирование предложения по аренде
+      description: Позволяет редактировать информицию предложения.
+
+      requestBody:
+        description: Объект предложения
+
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yml#/extendedFullOffer'
+        required: true
+
+      responses:
+        "201":
+          description: Измененное предложение
+          content:
+            application/json:
+              schema:
+                $ref: './schemas.yml#/extendedFullOffer'
+
+
+    delete:
+      tags:
+        - offers
+      summary: Удаление предложения по аренде
+      description: Удаляет предложение по аренде.
+
+      requestBody:
+        description: Идентификатор предложения об аренде
+
+        content:
+          application/json:
+            schema:
+              properties:
+                offerId:
+                  type: string
+                  example: 6329c3d6a04ab1061c6425ea
+        required: true
+
+      responses:
+        "201":
+          description: Предложение удалено.
+
+  /offers/premium:
+    post:
+      tags:
+        - offers
+      summary: Список премиальных предложений
+      description: Возвращает список премиальных предложений для определенного города
+
+      requestBody:
+        description: Название города, для которого нужно вернуть премиальные предложения
+
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+                  example: Amsterdam
+
+      responses:
+        "201":
+          description: Список премиальных предложений
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: './schemas.yml#/offer'
+
+
+  /favorites:
+    get:
+      tags:
+        - favorites
+      summary: Список избранных предложений по аренде
+      description: Возвращает список избранных предложений для авторизованного пользователя.
+
+      requestBody:
+        description: Идентификатор пользователя
+
+        content:
+          application/json:
+            schema:
+              properties:
+                userId:
+                  type: string
+                  example: 6329c3d6a04ab1061c6425ea
+
+      responses:
+        "201":
+          description: Список избранных предложений
+
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: './schemas.yml#/offer'
+
+    post:
+      tags:
+        - favorites
+      summary: Изменение статуса избранного для предложения
+      description: Добавляет или удаляет статус избранного для предложения.
+
+      requestBody:
+        description: Идентификатор предложения и статус поля "isFavorite"
+
+        content:
+          application/json:
+            schema:
+              properties:
+                offerId:
+                  type: string
+                  example: 6329c3d6a04ab1061c6425ea
+
+                isFavorite:
+                  type: boolean
+                  example: true
+
+      responses:
+        "201":
+          description: Статус изменен
+
+  /comments/{offerId}:
+    get:
+      tags:
+        - comments
+      summary: Список комментариев для предложения
+      description: Возвращает список комментариев для предложения.
+
+      responses:
+        "201":
+          description: Список комментариев к предложению
+
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: './schemas.yml#/comment'
+
+    post:
+      tags:
+        - comments
+      summary: Добавление нового комментария
+      description: Добавляет новый комментарий.
+
+      requestBody:
+        description: бъект комментария
+
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: './schemas.yml#/comment'
+
+      responses:
+        "201":
+          description: Созданный комментарий
+
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: './schemas.yml#/comment'

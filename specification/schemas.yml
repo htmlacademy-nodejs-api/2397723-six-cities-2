@@ -1,0 +1,193 @@
+createUser:
+  type: object
+
+  properties:
+    name:
+      type: string
+      example: John
+
+    avatarUrl:
+      type: string
+      example: http://best-avatars.ex
+
+    isPro:
+      type: boolean
+      example: true
+
+    email:
+      type: string
+      example: bonzo@zeppelin.com
+
+    password:
+      type: string
+      example: 123456
+
+user:
+  type: object
+
+  properties:
+    id:
+      type: string
+      example: 6329c3d6a04ab1061c6425ea
+
+    email:
+      type: string
+      example: bonzo@zeppelin.com
+
+    token:
+      type: string
+      example: 6329c3d6a04ab1061c6425ea
+
+loginUser:
+  type: object
+
+  properties:
+    email:
+      type: string
+      example: bonzo@zeppelin.com
+
+    password:
+      type: string
+      example: superSecretPass
+
+authUser:
+  type: object
+
+  properties:
+    token:
+      type: string
+      example: 6329c3d6a04ab1061c6425ea
+
+location:
+  type: object
+
+  properties:
+    longitude:
+      type: number
+      example: 10.1212121
+    latitude:
+      type: number
+      example: 20.2323232
+
+city:
+  type: object
+
+  properties:
+    name:
+      type: string
+      example: Amsterdam
+    location:
+      type: object
+      $ref: '#/location'
+
+offer:
+  properties:
+    title:
+      type: string
+      example: Some title for some offer
+
+    type:
+      type: string
+      example: room
+
+    price:
+      type: number
+      example: 100
+
+    city:
+      $ref: '#/city'
+
+    isFavorite:
+      type: boolean
+      example: true
+
+    isPremium:
+      type: boolean
+      example: false
+
+    rating:
+      type: number
+      example: 3
+
+    previewImage:
+      type: string
+      example: preview-image.jpg
+
+    commentsAmount:
+      type: number
+      example: 10
+
+    publishDate:
+      type: string
+      example: 2016-05-18T16:00:00Z
+
+fullOffer:
+  allOf:
+    - $ref: '#/offer'
+    - type: object
+
+      properties:
+        location:
+          $ref: '#/location'
+
+        description:
+          type: string
+          example: Some description for some offer
+
+        images:
+          type: array
+          items:
+            type: string
+          example: [
+            image1.jpg,
+            image2.jpg
+              image3.jpg
+              image4.jpg
+              image5.jpg
+              image6.jpg
+          ]
+
+        goods:
+          type: array
+          items:
+            type: string
+          example: [
+            Breakfast,
+            Washer,
+            Fridge
+          ]
+
+        host:
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+
+        bedrooms:
+          type: number
+          example: 4
+
+        maxAdults:
+          type: number
+          example: 3
+
+extendedFullOffer:
+  allOf:
+    - $ref: '#/fullOffer'
+    - type: object
+      properties:
+        offerId:
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+
+comment:
+  properties:
+    text:
+      type: string
+      example: Some comment of some offer
+
+    publishDate:
+      type: string
+      example: 2016-05-18T16:00:00Z
+
+    userid:
+      type: string
+      example: 6329c3d6a04ab1061c6425ea

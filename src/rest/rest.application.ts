@@ -1,6 +1,6 @@
 import {inject, injectable} from 'inversify';
 
-import { Logger } from '../shared/libs/logger/index.js';
+import {Logger} from '../shared/libs/logger/index.js';
 import {Config, RestSchema} from '../shared/libs/config/index.js';
 import {Component} from '../shared/types/index.js';
 import {DatabaseClient} from '../shared/libs/database-client/index.js';
@@ -12,7 +12,8 @@ export class RestApplication {
     @inject(Component.Logger) private readonly logger: Logger,
     @inject(Component.Config) private readonly config: Config<RestSchema>,
     @inject(Component.DatabaseClient) private readonly databaseClient: DatabaseClient,
-  ) {}
+  ) {
+  }
 
   private async _initDb() {
     const mongoUri = getMongoURI(
