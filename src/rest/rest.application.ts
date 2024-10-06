@@ -6,7 +6,6 @@ import {Config, RestSchema} from '../shared/libs/config/index.js';
 import {Component} from '../shared/types/index.js';
 import {DatabaseClient} from '../shared/libs/database-client/index.js';
 import {getMongoURI} from '../shared/helpers/index.js';
-import {CommentService} from '../shared/modules/comment/index.js';
 
 @injectable()
 export class RestApplication {
@@ -16,7 +15,6 @@ export class RestApplication {
     @inject(Component.Logger) private readonly logger: Logger,
     @inject(Component.Config) private readonly config: Config<RestSchema>,
     @inject(Component.DatabaseClient) private readonly databaseClient: DatabaseClient,
-    @inject(Component.CommentService) private readonly commentService: CommentService,
   ) {
     this.server = express();
   }
@@ -49,13 +47,5 @@ export class RestApplication {
     this.logger.info('Try to init server…');
     await this._initServer();
     this.logger.info(`Server started on http://localhost:${this.config.get('PORT')}`);
-
-    const rrr = await this.commentService.create({
-      text: 'fdfdfd',
-      rating: 3,
-      offerId: '66e554ee0c19a0f76db1b955',
-      authorId: '66e554ee0c19a0f76db1b953'
-    });
-    console.log(rrr);
   }
 }
