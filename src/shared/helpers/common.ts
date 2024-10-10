@@ -1,4 +1,5 @@
 import {HOST_AVATAR_PATH, HOTEL_IMAGE_PATH, MAX_IMAGES_AMOUNT, MAX_IMAGES_ARRAY_LENGTH} from '../const/index.js';
+import {ClassConstructor, plainToInstance} from 'class-transformer';
 
 export function generateRandomValue(min: number, max: number, numAfterDigit = 0) {
   return +((Math.random() * (max - min)) + min).toFixed(numAfterDigit);
@@ -41,4 +42,8 @@ export function generateImagesPaths() {
 
 export function getErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : '';
+}
+
+export function fillDTO<T, V>(someDto: ClassConstructor<T>, plainObject: V) {
+  return plainToInstance(someDto, plainObject, { excludeExtraneousValues: true });
 }
