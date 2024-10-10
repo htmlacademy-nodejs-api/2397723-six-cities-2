@@ -18,7 +18,6 @@ export class RestApplication {
     @inject(Component.DatabaseClient) private readonly databaseClient: DatabaseClient,
     @inject(Component.CommentController) private readonly commentController: Controller,
     @inject(Component.ExceptionFilter) private readonly appExceptionFilter: ExceptionFilter,
-
   ) {
     this.server = express();
   }
@@ -70,9 +69,9 @@ export class RestApplication {
 
     this.logger.info('Init exception filters');
     await this._initExceptionFilters();
-    this.logger.info('Exception filters initialization compleated');
+    this.logger.info('Exception filters initialization completed');
 
-    this.logger.info('Try to init server…');
+    this.logger.info('Try to init server...');
     await this._initServer();
     this.logger.info(`Server started on http://localhost:${this.config.get('PORT')}`);
   }
