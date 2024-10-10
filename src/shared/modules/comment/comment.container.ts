@@ -6,9 +6,9 @@ import {DefaultCommentService} from './default-comment.service.js';
 import {CommentEntity, CommentModel} from './comment.entity.js';
 
 export function createCommentContainer() {
-  const offerContainer = new Container();
-  offerContainer.bind<CommentService>(Component.OfferService).to(DefaultCommentService).inSingletonScope();
-  offerContainer.bind<types.ModelType<CommentEntity>>(Component.CommentService).toConstantValue(CommentModel);
+  const commentContainer = new Container();
+  commentContainer.bind<CommentService>(Component.OfferService).to(DefaultCommentService).inSingletonScope();
+  commentContainer.bind<types.ModelType<CommentEntity>>(Component.CommentService).toConstantValue(CommentModel);
 
-  return offerContainer;
+  return commentContainer;
 }
