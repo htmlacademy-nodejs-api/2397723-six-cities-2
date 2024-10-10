@@ -12,11 +12,11 @@ import {CreateCommentDto} from './dto/create-comment.dto.js';
 export class CommentController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
-    @inject(Component.CommentController) private readonly commentService: CommentService,
+    @inject(Component.CommentService) private readonly commentService: CommentService,
   ) {
     super(logger);
 
-    this.logger.info('Register routes for CommentsController…');
+    this.logger.info('Register routes for CommentController…');
 
     this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
     this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
