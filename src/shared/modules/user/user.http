@@ -3,7 +3,7 @@ Content-Type: application/json
 
 {
   "email": "torans@overlook.net",
-  "password": "shining"
+  "password": "shindrtryredtyerting"
 }
 
 ###
@@ -12,12 +12,12 @@ POST http://localhost:4000/users/register HTTP/1.1
 Content-Type: application/json
 
 {
-"name": "Serioja",
+"name": "Serioga",
 "avatarUrl": "torrance.png",
 "isPro": "true",
-"email": "serioja@serioja.ser",
-"token": "sdrfgsdrg3456sdg",
-"password": "shining"
+"email": "torans@overlook.net",
+"token": "sdrfgsdrhgg3456sdg",
+"password": "shindrtryredtyerting"
 }
 
 ###

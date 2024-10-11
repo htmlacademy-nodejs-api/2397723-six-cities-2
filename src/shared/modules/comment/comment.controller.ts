@@ -18,8 +18,8 @@ export class CommentController extends BaseController {
 
     this.logger.info('Register routes for CommentController…');
 
-    this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
-    this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
+    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.index});
+    this.addRoute({path: '/:offerId', method: HttpMethod.Post, handler: this.create});
   }
 
   public async index(req: Request, res: Response): Promise<void> {
