@@ -52,9 +52,10 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
-  public async findPremium(): Promise<DocumentType<OfferEntity>[]> {
+  public async findPremium(cityName: string): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel
-      .find({isPremium: true})
+      .find({isPremium: true, 'city.name': cityName})
+      .limit(3)
       .exec();
   }
 
