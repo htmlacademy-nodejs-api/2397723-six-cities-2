@@ -11,3 +11,4 @@ export * from './change-favorite-status-request.type.js';
 export * from './create-offer-request.type.js';
 export * from './offer.controller.js';
 export * from './premium-offers-request.type.js';
+export * from './dto/offers.dto.js';

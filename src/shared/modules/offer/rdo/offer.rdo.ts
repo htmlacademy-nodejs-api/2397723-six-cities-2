@@ -48,4 +48,7 @@ export class OfferRdo {
 
   @Expose()
   public maxAdults: number;
+
+  @Expose()
+  public commentCount: number;
 }

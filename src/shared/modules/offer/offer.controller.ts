@@ -82,6 +82,5 @@ export class OfferController extends BaseController {
   public async delete(req: Request, res: Response): Promise<void> {
     const result = await this.offerService.deleteById(req.params.id);
     this.ok(res, fillDTO(OfferRdo, result));
-    //TODO обработка ошибок
   }
 }
