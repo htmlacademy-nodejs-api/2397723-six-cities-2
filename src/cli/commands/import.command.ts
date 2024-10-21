@@ -59,7 +59,6 @@ export class ImportCommand implements Command {
       hostId: user.id,
       bedrooms: offer.bedrooms,
       maxAdults: offer.maxAdults,
-      commentCount: offer.commentCount
     });
 
   }

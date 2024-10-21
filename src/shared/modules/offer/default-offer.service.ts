@@ -6,6 +6,8 @@ import {CreateOfferDto} from './dto/create-offer.dto.js';
 import {Component} from '../../types/index.js';
 import {Logger} from '../../libs/logger/index.js';
 import {UpdateOfferDto} from './dto/update-offer.dto.js';
+import {DEFAULT_OFFERS_COUNT, MAX_PREMIUM_OFFERS} from '../../const/index.js';
+import {OffersDto} from './dto/offers.dto.js';
 
 @injectable()
 export class DefaultOfferService implements OfferService {
@@ -23,9 +25,11 @@ export class DefaultOfferService implements OfferService {
     return result;
   }
 
-  public async findAll(): Promise<DocumentType<OfferEntity>[]> {
+  public async findAll(dto: OffersDto = {offersAmount: DEFAULT_OFFERS_COUNT}): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel
       .find()
+      .limit(dto.offersAmount)
+      .sort({createdAt: -1})
       .exec();
   }
 
@@ -52,9 +56,10 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
-  public async findPremium(): Promise<DocumentType<OfferEntity>[]> {
+  public async findPremium(cityName: string): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel
-      .find({isPremium: true})
+      .find({isPremium: true, 'city.name': cityName})
+      .limit(MAX_PREMIUM_OFFERS)
       .exec();
   }
 

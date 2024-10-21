@@ -5,6 +5,7 @@ import {Logger} from '../../libs/logger/index.js';
 import {CommentEntity} from './comment.entity.js';
 import {DocumentType, types} from '@typegoose/typegoose';
 import {CreateCommentDto} from './dto/create-comment.dto.js';
+import {MAX_COMMENTS_AMOUNT} from '../../const/index.js';
 
 @injectable()
 export class DefaultCommentService implements CommentService {
@@ -44,6 +45,8 @@ export class DefaultCommentService implements CommentService {
   public async findByOfferId(offerId: string): Promise<DocumentType<CommentEntity>[]> {
     return this.commentModel
       .find({offerId})
+      .limit(MAX_COMMENTS_AMOUNT)
+      .sort({createdAt: -1})
       .populate(['authorId']);
   }
 }

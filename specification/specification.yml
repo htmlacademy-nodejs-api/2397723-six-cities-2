@@ -223,7 +223,7 @@ paths:
           description: Предложение удалено.
 
   /offers/premium:
-    post:
+    get:
       tags:
         - offers
       summary: Список премиальных предложений
