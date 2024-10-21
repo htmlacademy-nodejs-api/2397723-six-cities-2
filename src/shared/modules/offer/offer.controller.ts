@@ -20,17 +20,17 @@ export class OfferController extends BaseController {
     super(logger);
     this.logger.info('Register routes for OfferController...');
 
-    this.addRoute({path: '/', method: HttpMethod.Get, handler: this.showAll});
+    this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
     this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
     this.addRoute({path: '/premium', method: HttpMethod.Get, handler: this.premium});
     this.addRoute({path: '/favorites', method: HttpMethod.Get, handler: this.favorites});
     this.addRoute({path: '/favorites', method: HttpMethod.Patch, handler: this.changeFavoriteStatus});
-    this.addRoute({path: '/:id', method: HttpMethod.Get, handler: this.details});
+    this.addRoute({path: '/:id', method: HttpMethod.Get, handler: this.show});
     this.addRoute({path: '/:id', method: HttpMethod.Patch, handler: this.edit});
     this.addRoute({path: '/:id', method: HttpMethod.Delete, handler: this.delete});
   }
 
-  public async showAll(
+  public async index(
     _req: Request,
     res: Response,
   ): Promise<void> {
@@ -67,7 +67,7 @@ export class OfferController extends BaseController {
     this.ok(res, result);
   }
 
-  public async details(req: Request, res: Response): Promise<void> {
+  public async show(req: Request, res: Response): Promise<void> {
     if (isValidObjectId(req.params.id)) {
       const result = await this.offerService.findById(req.params.id);
       this.ok(res, fillDTO(OfferRdo, result));
