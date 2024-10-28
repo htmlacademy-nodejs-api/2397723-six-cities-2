@@ -3,7 +3,7 @@ Content-Type: application/json
 
 {
   "text": "first comment",
-  "rating": "4",
+  "rating": "1",
   "authorId": "6709458a0ba2080e9b726af1",
-  "offerId": "6709458a0ba2080e9b726af3"
+  "offerId": "6717e5e44e9c385b5322f816"
 }

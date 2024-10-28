@@ -18,6 +18,7 @@ export class DefaultOfferService implements OfferService {
   }
 
   public async create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>> {
+    dto.commentsCount = 0;
     const result = await this.offerModel
       .create(dto);
     this.logger.info(`New offer created: ${dto.title}`);
@@ -80,11 +81,67 @@ export class DefaultOfferService implements OfferService {
   }
 
   public async incCommentsCount(offerId: string): Promise<DocumentType<OfferEntity> | null> {
-    return this.offerModel
+    return await this.offerModel
       .findByIdAndUpdate(offerId, {
         '$inc': {
-          commentCount: 1,
+          commentsCount: 1,
         }
-      }).exec();
+      })
+      .exec();
+  }
+
+  public async updateRating(offerId: string): Promise<void> {
+    await this.offerModel
+      .aggregate(
+        [
+          {
+            '$match': {
+              '$expr': {
+                '$eq': [
+                  '$_id', {
+                    '$toObjectId': offerId
+                  }
+                ]
+              }
+            },
+            '$lookup': {
+              'from': 'comments',
+              'let': {
+                'offerId': '$offerId'
+              },
+              'pipeline': [
+                {
+                  '$match': {
+                    '$expr': {
+                      '$eq': [
+                        '$id', '$$offerId'
+                      ]
+                    }
+                  }
+                }, {
+                  '$group': {
+                    '_id': null,
+                    'avgComments': {
+                      '$avg': '$rating'
+                    }
+                  }
+                }
+              ],
+              'as': 'comments'
+            }
+          }, {
+            '$set': {
+              'rating': {
+                '$arrayElemAt': [
+                  '$comments.avgComments', 0
+                ]
+              }
+            }
+          }, {
+            '$unset': 'comments'
+          }
+        ]
+      ).exec();
+    this.logger.info('Rating updated');
   }
 }

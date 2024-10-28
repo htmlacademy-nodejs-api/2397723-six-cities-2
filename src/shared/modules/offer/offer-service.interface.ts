@@ -13,4 +13,5 @@ export interface OfferService {
   findFavorites(): Promise<DocumentType<OfferEntity>[]>;
   changeFavoritesStatus(offerId: string, favoriteStatus: boolean): Promise<DocumentType<OfferEntity> | null>;
   incCommentsCount(offerId: string): Promise<DocumentType<OfferEntity> | null>;
+  updateRating(offerId: string): Promise<void>;
 }

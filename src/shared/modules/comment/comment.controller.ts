@@ -7,14 +7,12 @@ import {CommentService} from './comment-service.interface.js';
 import {CommentRdo} from './rdo/comment.rdo.js';
 import {fillDTO} from '../../helpers/index.js';
 import {CreateCommentDto} from './dto/create-comment.dto.js';
-import {OfferService} from '../offer/index.js';
 
 @injectable()
 export class CommentController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.CommentService) private readonly commentService: CommentService,
-    @inject(Component.OfferService) private readonly offerService: OfferService,
   ) {
     super(logger);
 
@@ -36,6 +34,5 @@ export class CommentController extends BaseController {
   ): Promise<void> {
     const comment = await this.commentService.create(body);
     this.created(res, fillDTO(CommentRdo, comment));
-    await this.offerService.incCommentsCount(body.offerId);
   }
 }
