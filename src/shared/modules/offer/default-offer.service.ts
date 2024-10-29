@@ -91,57 +91,79 @@ export class DefaultOfferService implements OfferService {
   }
 
   public async updateRating(offerId: string): Promise<void> {
-    await this.offerModel
+    const newRating = await this.offerModel
       .aggregate(
         [
+          // Выбираем документ с нужным ID
           {
             '$match': {
               '$expr': {
                 '$eq': [
                   '$_id', {
-                    '$toObjectId': offerId
+                    $toObjectId: offerId
                   }
                 ]
               }
-            },
+            }
+          },
+
+          // Идем в другую коллекцию
+          {
             '$lookup': {
-              'from': 'comments',
+              'from': 'comments',             // Искать будем в коллекции комментариев
               'let': {
-                'offerId': '$offerId'
+                'offerId': '$offerId'         // Сохраняеняем ID оффера в переменную
               },
               'pipeline': [
                 {
-                  '$match': {
+                  '$match': {                 // Ищем все комментарии, пренадлежащие нашему оферу
                     '$expr': {
                       '$eq': [
                         '$id', '$$offerId'
                       ]
                     }
                   }
-                }, {
+                },
+
+                // Группируем найденные комментарии в одну сущность, у которой создаем поле avgRating, в который записываем среднее арифметическое рейтинга из всех комментариев
+                {
                   '$group': {
                     '_id': null,
-                    'avgComments': {
+                    'avgRating': {
                       '$avg': '$rating'
                     }
                   }
                 }
               ],
+
+              // Сохранем полученную группу со средним рейтингом в нашем оффере в поле comments
               'as': 'comments'
             }
-          }, {
-            '$set': {
-              'rating': {
-                '$arrayElemAt': [
-                  '$comments.avgComments', 0
-                ]
+          },
+
+          // Теперь запишем в поле rating нашего оффера среднее значение из полученной ранее группы
+          {
+            '$addFields':
+              {
+                'rating':
+                  {
+                    '$arrayElemAt':
+                      [
+                        '$comments.avgRating', 0
+                      ]
+                  }
               }
-            }
-          }, {
+          },
+
+          // И удалим поле comments
+          {
             '$unset': 'comments'
           }
         ]
       ).exec();
+    await this.offerModel.findByIdAndUpdate(offerId, {
+      rating: newRating[0].rating
+    });
     this.logger.info('Rating updated');
   }
 }

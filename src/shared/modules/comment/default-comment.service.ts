@@ -20,7 +20,7 @@ export class DefaultCommentService implements CommentService {
   public async create(dto: CreateCommentDto): Promise<DocumentType<CommentEntity>> {
     const result = await this.commentModel.create(dto);
 
-    this.logger.info(`New comment created: ${dto.text}}`);
+    this.logger.info(`New comment created: ${dto.text}`);
 
     await this.offerService.incCommentsCount(dto.offerId);
     await this.offerService.updateRating(dto.offerId);
