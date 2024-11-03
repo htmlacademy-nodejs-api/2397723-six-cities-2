@@ -1,6 +1,5 @@
 import {inject, injectable} from 'inversify';
-import {isValidObjectId} from 'mongoose';
-import {BaseController, HttpMethod} from '../../libs/rest/index.js';
+import {BaseController, HttpMethod, ValidateObjectIdMiddleware} from '../../libs/rest/index.js';
 import {Component} from '../../types/index.js';
 import {Logger} from '../../libs/logger/index.js';
 import {Request, Response} from 'express';
@@ -20,14 +19,18 @@ export class OfferController extends BaseController {
     super(logger);
     this.logger.info('Register routes for OfferController...');
 
-    this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.Get,
+      handler: this.index,
+    });
     this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
     this.addRoute({path: '/premium', method: HttpMethod.Get, handler: this.premium});
     this.addRoute({path: '/favorites', method: HttpMethod.Get, handler: this.favorites});
     this.addRoute({path: '/favorites', method: HttpMethod.Patch, handler: this.changeFavoriteStatus});
-    this.addRoute({path: '/:id', method: HttpMethod.Get, handler: this.show});
-    this.addRoute({path: '/:id', method: HttpMethod.Patch, handler: this.edit});
-    this.addRoute({path: '/:id', method: HttpMethod.Delete, handler: this.delete});
+    this.addRoute({path: '/:id', method: HttpMethod.Get, handler: this.show, middlewares: [new ValidateObjectIdMiddleware('id')]});
+    this.addRoute({path: '/:id', method: HttpMethod.Patch, handler: this.edit, middlewares: [new ValidateObjectIdMiddleware('id')]});
+    this.addRoute({path: '/:id', method: HttpMethod.Delete, handler: this.delete, middlewares: [new ValidateObjectIdMiddleware('id')]});
   }
 
   public async index(
@@ -68,10 +71,8 @@ export class OfferController extends BaseController {
   }
 
   public async show(req: Request, res: Response): Promise<void> {
-    if (isValidObjectId(req.params.id)) {
-      const result = await this.offerService.findById(req.params.id);
-      this.ok(res, fillDTO(OfferRdo, result));
-    }
+    const result = await this.offerService.findById(req.params.id);
+    this.ok(res, fillDTO(OfferRdo, result));
   }
 
   public async edit(req: Request, res: Response): Promise<void> {

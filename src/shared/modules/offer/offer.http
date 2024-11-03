@@ -35,12 +35,12 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:4000/offers/670a603ee6a96649c3e38120 HTTP/1.1
+GET http://localhost:4000/offers/6717e369c934030b401bf05e HTTP/1.1
 Content-Type: application/json
 
 ###
 
-PATCH http://localhost:4000/offers/6709458a0ba2080e9b726af3 HTTP/1.1
+PATCH http://localhost:4000/offers/6717e369c934030b401bf05e HTTP/1.1
 Content-Type: application/json
 
 {
@@ -49,7 +49,7 @@ Content-Type: application/json
 
 ###
 
-DELETE http://localhost:4000/offers/670a4a9519295f81eb0714fc HTTP/1.1
+DELETE http://localhost:4000/offers/6717e369c934030b401bf05e HTTP/1.1
 Content-Type: application/json
 
 ###

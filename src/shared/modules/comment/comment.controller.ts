@@ -1,6 +1,6 @@
 import {inject, injectable} from 'inversify';
 import {Request, Response} from 'express';
-import {BaseController, HttpMethod} from '../../libs/rest/index.js';
+import {BaseController, HttpMethod, ValidateObjectIdMiddleware} from '../../libs/rest/index.js';
 import {Logger} from '../../libs/logger/index.js';
 import {Component} from '../../types/index.js';
 import {CommentService} from './comment-service.interface.js';
@@ -18,8 +18,8 @@ export class CommentController extends BaseController {
 
     this.logger.info('Register routes for CommentController…');
 
-    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.index});
-    this.addRoute({path: '/:offerId', method: HttpMethod.Post, handler: this.create});
+    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.index, middlewares: [new ValidateObjectIdMiddleware('offerId')]});
+    this.addRoute({path: '/:offerId', method: HttpMethod.Post, handler: this.create, middlewares: [new ValidateObjectIdMiddleware('offerId')]});
   }
 
   public async index(req: Request, res: Response): Promise<void> {
