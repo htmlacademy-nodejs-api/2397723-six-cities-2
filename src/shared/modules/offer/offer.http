@@ -7,30 +7,45 @@ POST http://localhost:4000/offers HTTP/1.1
 Content-Type: application/json
 
 {
-  "title": "Serioga",
-  "type": "torrance.png",
-  "price": "20",
+  "title": "Very beautiful place",
+  "type": "room",
+  "price": 2000,
   "city": {
     "name": "Amsterdam",
     "location": {
-      "longitude": "33737",
-      "latitude": "32867"
+      "longitude": 33737,
+      "latitude": 32867,
+      "zoom": 10
     }
   },
   "location": {
-    "longitude": "33737",
-    "latitude": "32867"
+    "longitude": 33737,
+    "latitude": 32867,
+    "zoom": 15
   },
-  "isFavorite": "true",
-  "isPremium": "true",
-  "rating": "2",
+  "isFavorite": true,
+  "isPremium": true,
+  "rating": 2,
   "description": "shindrtryredtyerting",
-  "images": "shindrtryredtyerting",
+  "images": [
+    "shindrtryredtyerting",
+    "shindrtryredtyerting",
+    "shindrtryredtyerting",
+    "shindrtryredtyerting",
+    "shindrtryredtyerting",
+    "shindrtryredtyerting"
+  ],
   "previewImage": "shindrtryredtyerting",
-  "goods": "shindrtryredtyerting",
-  "hostId": "shindrtryredtyerting",
-  "bedrooms": "1",
-  "maxAdults": "2"
+  "goods": [
+    "Air conditioning",
+    "Laptop friendly workspace",
+    "Baby seat",
+    "Washer"
+  ],
+  "hostId": "6717e369c934030b401bf05c",
+  "bedrooms": 1,
+  "maxAdults": 2,
+  "commentsCount": 0
 }
 
 ###

@@ -1,5 +1,5 @@
 import {inject, injectable} from 'inversify';
-import {BaseController, HttpMethod, ValidateObjectIdMiddleware} from '../../libs/rest/index.js';
+import {BaseController, HttpMethod, ValidateDtoMiddleware, ValidateObjectIdMiddleware} from '../../libs/rest/index.js';
 import {Component} from '../../types/index.js';
 import {Logger} from '../../libs/logger/index.js';
 import {Request, Response} from 'express';
@@ -9,6 +9,7 @@ import {CreateOfferRequest} from './create-offer-request.type.js';
 import {OfferRdo} from './rdo/offer.rdo.js';
 import {PremiumOffersRequest} from './premium-offers-request.type.js';
 import {ChangeFavoriteStatusRequest} from './change-favorite-status-request.type.js';
+import {CreateOfferDto} from './dto/create-offer.dto.js';
 
 @injectable()
 export class OfferController extends BaseController {
@@ -24,7 +25,7 @@ export class OfferController extends BaseController {
       method: HttpMethod.Get,
       handler: this.index,
     });
-    this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
+    this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create, middlewares: [new ValidateDtoMiddleware((CreateOfferDto))]});
     this.addRoute({path: '/premium', method: HttpMethod.Get, handler: this.premium});
     this.addRoute({path: '/favorites', method: HttpMethod.Get, handler: this.favorites});
     this.addRoute({path: '/favorites', method: HttpMethod.Patch, handler: this.changeFavoriteStatus});
