@@ -3,21 +3,21 @@ import {City, Location, OfferGood} from '../../types/index.js';
 import {UserEntity} from '../user/index.js';
 
 class LocationEntity {
-  @prop({type: Number})
+  @prop({required: true, type: Number})
   public latitude: number;
 
-  @prop({type: Number})
+  @prop({required: true, type: Number})
   public longitude: number;
 
-  @prop({type: Number})
+  @prop({required: true, type: Number})
   public zoom: number;
 }
 
 class CityEntity {
-  @prop({type: String})
+  @prop({required: true, type: String})
   public name: string;
 
-  @prop({type: LocationEntity})
+  @prop({required: true, type: LocationEntity})
   public location: LocationEntity;
 }
 
