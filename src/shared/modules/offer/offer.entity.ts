@@ -2,7 +2,7 @@ import {defaultClasses, getModelForClass, modelOptions, prop, Ref} from '@typego
 import {City, Location, OfferGood} from '../../types/index.js';
 import {UserEntity} from '../user/index.js';
 
-class LocationGoose {
+class LocationEntity {
   @prop({type: Number})
   public latitude: number;
 
@@ -13,12 +13,12 @@ class LocationGoose {
   public zoom: number;
 }
 
-class CityGoose {
+class CityEntity {
   @prop({type: String})
   public name: string;
 
-  @prop({type: LocationGoose})
-  public location: LocationGoose;
+  @prop({type: LocationEntity})
+  public location: LocationEntity;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
@@ -43,10 +43,10 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({required: true, type: Number})
   public price: number;
 
-  @prop({required: true, type: CityGoose})
+  @prop({required: true, type: CityEntity})
   public city: City;
 
-  @prop({required: true, type: LocationGoose})
+  @prop({required: true, type: LocationEntity})
   public location: Location;
 
   @prop({required: true, type: Boolean})
@@ -78,6 +78,9 @@ export class OfferEntity extends defaultClasses.TimeStamps {
 
   @prop({required: true, type: Number})
   public maxAdults: number;
+
+  @prop({required: true, type: Number})
+  public commentsCount: number;
 }
 
 export const OfferModel = getModelForClass(OfferEntity);

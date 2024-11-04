@@ -6,6 +6,8 @@ import {CreateOfferDto} from './dto/create-offer.dto.js';
 import {Component} from '../../types/index.js';
 import {Logger} from '../../libs/logger/index.js';
 import {UpdateOfferDto} from './dto/update-offer.dto.js';
+import {DEFAULT_OFFERS_COUNT, MAX_PREMIUM_OFFERS} from '../../const/index.js';
+import {OffersDto} from './dto/offers.dto.js';
 
 @injectable()
 export class DefaultOfferService implements OfferService {
@@ -16,6 +18,7 @@ export class DefaultOfferService implements OfferService {
   }
 
   public async create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>> {
+    dto.commentsCount = 0;
     const result = await this.offerModel
       .create(dto);
     this.logger.info(`New offer created: ${dto.title}`);
@@ -23,9 +26,11 @@ export class DefaultOfferService implements OfferService {
     return result;
   }
 
-  public async findAll(): Promise<DocumentType<OfferEntity>[]> {
+  public async findAll(dto: OffersDto = {offersAmount: DEFAULT_OFFERS_COUNT}): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel
       .find()
+      .limit(dto.offersAmount)
+      .sort({createdAt: -1})
       .exec();
   }
 
@@ -52,9 +57,10 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
-  public async findPremium(): Promise<DocumentType<OfferEntity>[]> {
+  public async findPremium(cityName: string): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel
-      .find({isPremium: true})
+      .find({isPremium: true, 'city.name': cityName})
+      .limit(MAX_PREMIUM_OFFERS)
       .exec();
   }
 
@@ -75,11 +81,89 @@ export class DefaultOfferService implements OfferService {
   }
 
   public async incCommentsCount(offerId: string): Promise<DocumentType<OfferEntity> | null> {
-    return this.offerModel
+    return await this.offerModel
       .findByIdAndUpdate(offerId, {
         '$inc': {
-          commentCount: 1,
+          commentsCount: 1,
         }
-      }).exec();
+      })
+      .exec();
+  }
+
+  public async updateRating(offerId: string): Promise<void> {
+    const newRating = await this.offerModel
+      .aggregate(
+        [
+          // Выбираем документ с нужным ID
+          {
+            '$match': {
+              '$expr': {
+                '$eq': [
+                  '$_id', {
+                    $toObjectId: offerId
+                  }
+                ]
+              }
+            }
+          },
+
+          // Идем в другую коллекцию
+          {
+            '$lookup': {
+              'from': 'comments',             // Искать будем в коллекции комментариев
+              'let': {
+                'offerId': '$offerId'         // Сохраняеняем ID оффера в переменную
+              },
+              'pipeline': [
+                {
+                  '$match': {                 // Ищем все комментарии, пренадлежащие нашему оферу
+                    '$expr': {
+                      '$eq': [
+                        '$id', '$$offerId'
+                      ]
+                    }
+                  }
+                },
+
+                // Группируем найденные комментарии в одну сущность, у которой создаем поле avgRating, в который записываем среднее арифметическое рейтинга из всех комментариев
+                {
+                  '$group': {
+                    '_id': null,
+                    'avgRating': {
+                      '$avg': '$rating'
+                    }
+                  }
+                }
+              ],
+
+              // Сохранем полученную группу со средним рейтингом в нашем оффере в поле comments
+              'as': 'comments'
+            }
+          },
+
+          // Теперь запишем в поле rating нашего оффера среднее значение из полученной ранее группы
+          {
+            '$addFields':
+              {
+                'rating':
+                  {
+                    '$arrayElemAt':
+                      [
+                        '$comments.avgRating', 0
+                      ]
+                  }
+              }
+          },
+
+          // И удалим поле comments
+          {
+            '$unset': 'comments'
+          }
+        ]
+      ).exec();
+    await this.offerModel.findByIdAndUpdate(offerId, {
+      rating: newRating[0].rating
+    });
+    this.logger.info('Rating updated');
   }
 }
