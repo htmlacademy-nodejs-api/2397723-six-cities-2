@@ -1,4 +1,4 @@
-export const CreateOfferValidationMessage = {
+export const UpdateOfferValidationMessages = {
   title: {
     invalidFormat: 'title must be a string',
     minLength: 'minimum title length must be 10',
@@ -55,3 +55,4 @@ export const CreateOfferValidationMessage = {
     maxValue: 'maximum max adults count is 10',
   }
 } as const;
+

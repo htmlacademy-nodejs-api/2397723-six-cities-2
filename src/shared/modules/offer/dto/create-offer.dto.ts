@@ -1,3 +1,4 @@
+import {Type} from 'class-transformer';
 import {
   ArrayMaxSize,
   ArrayMinSize, ArrayUnique,
@@ -14,28 +15,9 @@ import {
 } from 'class-validator';
 
 import {City, Location, OfferGood, OfferType} from '../../../types/index.js';
-import {CityAndLocationValidationMessage, CreateOfferValidationMessage} from './create-offer.messages.js';
-import {Type} from 'class-transformer';
-
-class LocationValidate implements Location {
-  @IsInt({message: CityAndLocationValidationMessage.location.longitude.invalidFormat})
-  public longitude: number;
-
-  @IsInt({message: CityAndLocationValidationMessage.location.latitude.invalidFormat})
-  public latitude: number;
-
-  @IsInt({message: CityAndLocationValidationMessage.location.zoom.invalidFormat})
-  public zoom: number;
-}
-
-class CityValidate implements City {
-  @IsString({message: CityAndLocationValidationMessage.city.name.invalidFormat})
-  public name: string;
-
-  @ValidateNested({message: CityAndLocationValidationMessage.location.invalid})
-  @Type(() => LocationValidate)
-  public location: Location;
-}
+import {CreateOfferValidationMessage} from './create-offer.messages.js';
+import {CityAndLocationValidationMessages} from './city-and-location.messages.js';
+import {CityValidate, LocationValidate} from './city-and-location.dto.js';
 
 export class CreateOfferDto {
   @IsString({message: CreateOfferValidationMessage.title.minLength})
@@ -52,11 +34,11 @@ export class CreateOfferDto {
   public price: number;
 
   @Type(() => CityValidate)
-  @ValidateNested({message: CityAndLocationValidationMessage.city.invalid})
+  @ValidateNested({message: CityAndLocationValidationMessages.city.invalid})
   public city: City;
 
   @Type(() => LocationValidate)
-  @ValidateNested({message: CityAndLocationValidationMessage.location.invalid})
+  @ValidateNested({message: CityAndLocationValidationMessages.location.invalid})
   public location: Location;
 
   @IsBoolean({message: CreateOfferValidationMessage.isFavorite.invalidFormat})

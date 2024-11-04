@@ -4,18 +4,21 @@ import {Component} from '../../types/index.js';
 import {Logger} from '../../libs/logger/index.js';
 import {Request, Response} from 'express';
 import {fillDTO} from '../../helpers/index.js';
-import {OfferService} from './offer-service.interface.js';
+import {OfferServiceInterface} from './offer-service.interface.js';
 import {CreateOfferRequest} from './create-offer-request.type.js';
 import {OfferRdo} from './rdo/offer.rdo.js';
 import {PremiumOffersRequest} from './premium-offers-request.type.js';
 import {ChangeFavoriteStatusRequest} from './change-favorite-status-request.type.js';
 import {CreateOfferDto} from './dto/create-offer.dto.js';
+import {PremiumOffersDto} from './dto/premium-offers.dto.js';
+import {ChangeFavoriteStatusDto} from './dto/change-favorite-status.dto.js';
+import {UpdateOfferDto} from './dto/update-offer.dto.js';
 
 @injectable()
 export class OfferController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
-    @inject(Component.OfferService) private readonly offerService: OfferService,
+    @inject(Component.OfferService) private readonly offerService: OfferServiceInterface,
   ) {
     super(logger);
     this.logger.info('Register routes for OfferController...');
@@ -25,13 +28,43 @@ export class OfferController extends BaseController {
       method: HttpMethod.Get,
       handler: this.index,
     });
-    this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create, middlewares: [new ValidateDtoMiddleware((CreateOfferDto))]});
-    this.addRoute({path: '/premium', method: HttpMethod.Get, handler: this.premium});
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [new ValidateDtoMiddleware((CreateOfferDto))]
+    });
+    this.addRoute({
+      path: '/premium',
+      method: HttpMethod.Get,
+      handler: this.premium,
+      middlewares: [new ValidateDtoMiddleware(PremiumOffersDto)]
+    });
     this.addRoute({path: '/favorites', method: HttpMethod.Get, handler: this.favorites});
-    this.addRoute({path: '/favorites', method: HttpMethod.Patch, handler: this.changeFavoriteStatus});
-    this.addRoute({path: '/:id', method: HttpMethod.Get, handler: this.show, middlewares: [new ValidateObjectIdMiddleware('id')]});
-    this.addRoute({path: '/:id', method: HttpMethod.Patch, handler: this.edit, middlewares: [new ValidateObjectIdMiddleware('id')]});
-    this.addRoute({path: '/:id', method: HttpMethod.Delete, handler: this.delete, middlewares: [new ValidateObjectIdMiddleware('id')]});
+    this.addRoute({
+      path: '/favorites',
+      method: HttpMethod.Patch,
+      handler: this.changeFavoriteStatus,
+      middlewares: [new ValidateDtoMiddleware(ChangeFavoriteStatusDto)]
+    });
+    this.addRoute({
+      path: '/:id',
+      method: HttpMethod.Get,
+      handler: this.show,
+      middlewares: [new ValidateObjectIdMiddleware('id')]
+    });
+    this.addRoute({
+      path: '/:id',
+      method: HttpMethod.Patch,
+      handler: this.edit,
+      middlewares: [new ValidateObjectIdMiddleware('id'), new ValidateDtoMiddleware(UpdateOfferDto)]
+    });
+    this.addRoute({
+      path: '/:id',
+      method: HttpMethod.Delete,
+      handler: this.delete,
+      middlewares: [new ValidateObjectIdMiddleware('id')]
+    });
   }
 
   public async index(

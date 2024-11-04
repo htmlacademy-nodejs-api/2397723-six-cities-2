@@ -1,6 +1,7 @@
 import {inject, injectable} from 'inversify';
 import {DocumentType, types} from '@typegoose/typegoose';
-import {OfferService} from './offer-service.interface.js';
+
+import {OfferServiceInterface} from './offer-service.interface.js';
 import {OfferEntity} from './offer.entity.js';
 import {CreateOfferDto} from './dto/create-offer.dto.js';
 import {Component} from '../../types/index.js';
@@ -10,7 +11,7 @@ import {DEFAULT_OFFERS_COUNT, MAX_PREMIUM_OFFERS} from '../../const/index.js';
 import {OffersDto} from './dto/offers.dto.js';
 
 @injectable()
-export class DefaultOfferService implements OfferService {
+export class OfferService implements OfferServiceInterface {
   constructor(
     @inject(Component.Logger) private readonly logger: Logger,
     @inject(Component.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>
@@ -94,7 +95,6 @@ export class DefaultOfferService implements OfferService {
     const newRating = await this.offerModel
       .aggregate(
         [
-          // Выбираем документ с нужным ID
           {
             '$match': {
               '$expr': {
@@ -106,17 +106,15 @@ export class DefaultOfferService implements OfferService {
               }
             }
           },
-
-          // Идем в другую коллекцию
           {
             '$lookup': {
-              'from': 'comments',             // Искать будем в коллекции комментариев
+              'from': 'comments',
               'let': {
-                'offerId': '$offerId'         // Сохраняеняем ID оффера в переменную
+                'offerId': '$offerId'
               },
               'pipeline': [
                 {
-                  '$match': {                 // Ищем все комментарии, пренадлежащие нашему оферу
+                  '$match': {
                     '$expr': {
                       '$eq': [
                         '$id', '$$offerId'
@@ -124,8 +122,6 @@ export class DefaultOfferService implements OfferService {
                     }
                   }
                 },
-
-                // Группируем найденные комментарии в одну сущность, у которой создаем поле avgRating, в который записываем среднее арифметическое рейтинга из всех комментариев
                 {
                   '$group': {
                     '_id': null,
@@ -135,13 +131,9 @@ export class DefaultOfferService implements OfferService {
                   }
                 }
               ],
-
-              // Сохранем полученную группу со средним рейтингом в нашем оффере в поле comments
               'as': 'comments'
             }
           },
-
-          // Теперь запишем в поле rating нашего оффера среднее значение из полученной ранее группы
           {
             '$addFields':
               {
@@ -154,8 +146,6 @@ export class DefaultOfferService implements OfferService {
                   }
               }
           },
-
-          // И удалим поле comments
           {
             '$unset': 'comments'
           }
