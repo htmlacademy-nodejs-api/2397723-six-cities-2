@@ -20,7 +20,7 @@ import {CityAndLocationValidationMessages} from './city-and-location.messages.js
 import {CityValidate, LocationValidate} from './city-and-location.dto.js';
 
 export class CreateOfferDto {
-  @IsString({message: CreateOfferValidationMessage.title.minLength})
+  @IsString({message: CreateOfferValidationMessage.title.invalidFormat})
   @MinLength(10, {message: CreateOfferValidationMessage.title.minLength})
   @MaxLength(100, {message: CreateOfferValidationMessage.title.maxLength})
   public title: string;
@@ -48,8 +48,8 @@ export class CreateOfferDto {
   public isPremium: boolean;
 
   @IsNumber({maxDecimalPlaces: 1}, {message: CreateOfferValidationMessage.rating.invalidFormat})
-  @Min(1, {message: CreateOfferValidationMessage.price.minValue})
-  @Max(5, {message: CreateOfferValidationMessage.price.maxValue})
+  @Min(1, {message: CreateOfferValidationMessage.rating.minValue})
+  @Max(5, {message: CreateOfferValidationMessage.rating.maxValue})
   public rating: number;
 
   @IsString({message: CreateOfferValidationMessage.description.invalidFormat})

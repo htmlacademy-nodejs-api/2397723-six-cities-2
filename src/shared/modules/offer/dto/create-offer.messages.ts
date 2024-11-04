@@ -20,8 +20,8 @@ export const CreateOfferValidationMessage = {
   },
   rating: {
     invalidFormat: 'rating must be a number with maximum 1 decimal place',
-    minValue: 'minimum price is 100',
-    maxValue: 'maximum price is 200000',
+    minValue: 'minimum rating is 1',
+    maxValue: 'maximum rating is 5',
   },
   description: {
     invalidFormat: 'description must be a string',
@@ -34,7 +34,7 @@ export const CreateOfferValidationMessage = {
     invalidItem: 'items of images array must be a string type'
   },
   image: {
-    invalidFormat: 'image must be a string type',
+    invalidFormat: 'image must be a string',
   },
   offerGood: {
     invalid: 'offerGood must be an array',
