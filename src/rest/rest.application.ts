@@ -23,6 +23,7 @@ export class RestApplication {
 
   ) {
     this.server = express();
+    this.server.disable('x-powered-by');
   }
 
   private async _initDb() {
@@ -37,7 +38,7 @@ export class RestApplication {
     return this.databaseClient.connect(mongoUri);
   }
 
-  private async _initServer() {
+  private async _startServer() {
     const port = this.config.get('PORT');
     this.server.listen(port);
   }
@@ -77,7 +78,7 @@ export class RestApplication {
     this.logger.info('Exception filters initialization completed');
 
     this.logger.info('Try to init server...');
-    await this._initServer();
+    await this._startServer();
     this.logger.info(`Server started on http://localhost:${this.config.get('PORT')}`);
   }
 }

@@ -1,12 +1,13 @@
 import {inject, injectable} from 'inversify';
 import {Request, Response} from 'express';
-import {BaseController, HttpMethod} from '../../libs/rest/index.js';
+import {BaseController, HttpMethod, ValidateDtoMiddleware, ValidateObjectIdMiddleware} from '../../libs/rest/index.js';
 import {Logger} from '../../libs/logger/index.js';
 import {Component} from '../../types/index.js';
 import {CommentService} from './comment-service.interface.js';
 import {CommentRdo} from './rdo/comment.rdo.js';
 import {fillDTO} from '../../helpers/index.js';
 import {CreateCommentDto} from './dto/create-comment.dto.js';
+import {CreateOfferDto} from '../offer/index.js';
 
 @injectable()
 export class CommentController extends BaseController {
@@ -16,10 +17,20 @@ export class CommentController extends BaseController {
   ) {
     super(logger);
 
-    this.logger.info('Register routes for CommentController…');
+    this.logger.info('Register routes for CommentController...');
 
-    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.index});
-    this.addRoute({path: '/:offerId', method: HttpMethod.Post, handler: this.create});
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Get,
+      handler: this.index,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+    });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [new ValidateObjectIdMiddleware('offerId'), new ValidateDtoMiddleware(CreateOfferDto)]
+    });
   }
 
   public async index(req: Request, res: Response): Promise<void> {
