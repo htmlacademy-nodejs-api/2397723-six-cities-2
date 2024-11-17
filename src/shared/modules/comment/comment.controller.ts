@@ -47,10 +47,10 @@ export class CommentController extends BaseController {
   }
 
   public async create(
-    {body}: Request<Record<string, unknown>, Record<string, unknown>, CreateCommentDto>,
+    {body, tokenPayload}: Request<Record<string, unknown>, Record<string, unknown>, CreateCommentDto>,
     res: Response
   ): Promise<void> {
-    const comment = await this.commentService.create(body);
+    const comment = await this.commentService.create({ ...body, authorId: tokenPayload.id });
     this.created(res, fillDTO(CommentRdo, comment));
   }
 }
