@@ -18,6 +18,11 @@ export class OfferService implements OfferServiceInterface {
   ) {
   }
 
+  public async exists(documentId: string): Promise<boolean> {
+    return (await this.offerModel
+      .exists({_id: documentId})) !== null;
+  }
+
   public async create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>> {
     dto.commentsCount = 0;
     const result = await this.offerModel
