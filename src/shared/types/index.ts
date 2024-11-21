@@ -7,3 +7,4 @@ export * from './offer-good.enum.js';
 export * from './mock-server-data.type.js';
 export * from './good.union-type.js';
 export * from './component.enum.js';
+export * from './document-exists.interface.js';
