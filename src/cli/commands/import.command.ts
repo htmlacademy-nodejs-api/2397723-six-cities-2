@@ -38,10 +38,6 @@ export class ImportCommand implements Command {
   }
 
   private async saveOffer(offer: AutoGenerateOffer) {
-    console.log({
-      ...offer.host,
-      password: DEFAULT_USER_PASSWORD
-    })
     const user = await this.userService.findOrCreate({
       ...offer.host,
       password: DEFAULT_USER_PASSWORD
