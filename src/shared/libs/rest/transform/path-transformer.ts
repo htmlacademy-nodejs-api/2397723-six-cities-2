@@ -32,13 +32,16 @@ export class PathTransformer {
     const stack = [data];
     while (stack.length > 0) {
       const current = stack.pop();
+
       for (const key in current) {
         if (Object.hasOwn(current, key)) {
           const value = current[key];
+
           if (isObject(value)) {
             stack.push(value);
             continue;
           }
+
           if (this.isStaticProperty(key) && typeof value === 'string') {
             const staticPath = STATIC_FILES_ROUTE;
             const uploadPath = STATIC_UPLOAD_ROUTE;

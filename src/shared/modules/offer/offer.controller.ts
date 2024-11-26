@@ -96,7 +96,7 @@ export class OfferController extends BaseController {
     if (!tokenPayload) {
       result.map((item) => (item.isFavorite = false));
     }
-    this.ok(res, result);
+    this.ok(res, fillDTO(OfferRdo, result));
   }
 
   public async create(
