@@ -5,7 +5,7 @@ import {createOffer, getErrorMessage, getMongoURI} from '../../shared/helpers/in
 import {Offer} from '../../shared/types/index.js';
 import {DatabaseClient, MongoDatabaseClient} from '../../shared/libs/database-client/index.js';
 import {DefaultUserService, UserModel, UserService} from '../../shared/modules/user/index.js';
-import {DefaultOfferService, OfferModel, OfferService} from '../../shared/modules/offer/index.js';
+import {OfferModel, OfferService} from '../../shared/modules/offer/index.js';
 import {ConsoleLogger} from '../../shared/libs/logger/console.logger.js';
 import {Logger} from '../../shared/libs/logger/index.js';
 
@@ -21,7 +21,7 @@ export class ImportCommand implements Command {
     this.onCompleteImport = this.onCompleteImport.bind(this);
 
     this.logger = new ConsoleLogger();
-    this.offerService = new DefaultOfferService(this.logger, OfferModel);
+    this.offerService = new OfferService(this.logger, OfferModel);
     this.userService = new DefaultUserService(this.logger, UserModel);
     this.databaseClient = new MongoDatabaseClient(this.logger);
   }
@@ -59,6 +59,7 @@ export class ImportCommand implements Command {
       hostId: user.id,
       bedrooms: offer.bedrooms,
       maxAdults: offer.maxAdults,
+      commentsCount: 0
     });
 
   }
