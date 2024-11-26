@@ -112,7 +112,7 @@ export class OfferController extends BaseController {
     res: Response,
   ): Promise<void> {
     const result = await this.offerService.findPremium(body.cityName);
-    this.ok(res, result);
+    this.ok(res, fillDTO(OfferRdo, result));
   }
 
   public async favorites(_req: Request, res: Response): Promise<void> {
