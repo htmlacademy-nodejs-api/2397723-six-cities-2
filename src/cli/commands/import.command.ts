@@ -2,7 +2,7 @@ import {Command} from './command.interface.js';
 import {DEFAULT_DB_PORT, DEFAULT_USER_PASSWORD} from './command.constant.js';
 import {TSVFileReader} from '../../shared/libs/file-reader/tsv-file-reader.js';
 import {createOffer, getErrorMessage, getMongoURI} from '../../shared/helpers/index.js';
-import {Offer} from '../../shared/types/index.js';
+import {AutoGenerateOffer} from '../../shared/types/index.js';
 import {DatabaseClient, MongoDatabaseClient} from '../../shared/libs/database-client/index.js';
 import {DefaultUserService, UserModel, UserService} from '../../shared/modules/user/index.js';
 import {OfferModel, OfferService} from '../../shared/modules/offer/index.js';
@@ -37,7 +37,11 @@ export class ImportCommand implements Command {
     this.databaseClient.disconnect();
   }
 
-  private async saveOffer(offer: Offer) {
+  private async saveOffer(offer: AutoGenerateOffer) {
+    console.log({
+      ...offer.host,
+      password: DEFAULT_USER_PASSWORD
+    })
     const user = await this.userService.findOrCreate({
       ...offer.host,
       password: DEFAULT_USER_PASSWORD
