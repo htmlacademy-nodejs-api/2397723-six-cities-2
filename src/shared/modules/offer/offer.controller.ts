@@ -2,7 +2,7 @@ import {inject, injectable} from 'inversify';
 import {
   BaseController,
   DocumentExistsMiddleware,
-  HttpMethod,
+  HttpMethod, PrivateRouteMiddleware,
   ValidateDtoMiddleware,
   ValidateObjectIdMiddleware
 } from '../../libs/rest/index.js';
@@ -38,7 +38,10 @@ export class OfferController extends BaseController {
       path: '/',
       method: HttpMethod.Post,
       handler: this.create,
-      middlewares: [new ValidateDtoMiddleware((CreateOfferDto))]
+      middlewares: [
+        new ValidateDtoMiddleware((CreateOfferDto)),
+        new PrivateRouteMiddleware()
+      ]
     });
     this.addRoute({
       path: '/premium',
@@ -51,7 +54,10 @@ export class OfferController extends BaseController {
       path: '/favorites',
       method: HttpMethod.Patch,
       handler: this.changeFavoriteStatus,
-      middlewares: [new ValidateDtoMiddleware(ChangeFavoriteStatusDto)]
+      middlewares: [
+        new ValidateDtoMiddleware(ChangeFavoriteStatusDto),
+        new PrivateRouteMiddleware()
+      ]
     });
     this.addRoute({
       path: '/:id',
@@ -63,29 +69,41 @@ export class OfferController extends BaseController {
       path: '/:id',
       method: HttpMethod.Patch,
       handler: this.edit,
-      middlewares: [new ValidateObjectIdMiddleware('id'), new ValidateDtoMiddleware(UpdateOfferDto), new DocumentExistsMiddleware(this.offerService, 'Offer', 'id')]
+      middlewares: [
+        new ValidateObjectIdMiddleware('id'),
+        new ValidateDtoMiddleware(UpdateOfferDto),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'id'),
+        new PrivateRouteMiddleware()
+      ]
     });
     this.addRoute({
       path: '/:id',
       method: HttpMethod.Delete,
       handler: this.delete,
-      middlewares: [new ValidateObjectIdMiddleware('id'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'id'),]
+      middlewares: [
+        new ValidateObjectIdMiddleware('id'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'id'),
+        new PrivateRouteMiddleware()
+      ]
     });
   }
 
   public async index(
-    _req: Request,
+    {tokenPayload}: Request,
     res: Response,
   ): Promise<void> {
     const result = await this.offerService.findAll();
+    if (!tokenPayload) {
+      result.map((item) => (item.isFavorite = false));
+    }
     this.ok(res, result);
   }
 
   public async create(
-    {body}: CreateOfferRequest,
+    {body, tokenPayload}: CreateOfferRequest,
     res: Response,
   ): Promise<void> {
-    const result = await this.offerService.create(body);
+    const result = await this.offerService.create({...body, hostId: tokenPayload.id});
     this.created(res, fillDTO(OfferRdo, result));
   }
 

@@ -5,7 +5,7 @@ import {
   IsArray,
   IsBoolean,
   IsEnum,
-  IsInt, IsMongoId,
+  IsInt,
   IsNumber, IsString,
   Max,
   MaxLength,
@@ -71,7 +71,6 @@ export class CreateOfferDto {
   @ArrayUnique({message: CreateOfferValidationMessage.offerGood.unique})
   public goods: OfferGood[];
 
-  @IsMongoId({message: CreateOfferValidationMessage.hostId.invalidId})
   public hostId: string;
 
   @IsInt({message: CreateOfferValidationMessage.bedrooms.invalidFormat})

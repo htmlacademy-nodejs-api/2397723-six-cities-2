@@ -3,7 +3,7 @@ import {Request, Response} from 'express';
 import {
   BaseController,
   DocumentExistsMiddleware,
-  HttpMethod,
+  HttpMethod, PrivateRouteMiddleware,
   ValidateDtoMiddleware,
   ValidateObjectIdMiddleware
 } from '../../libs/rest/index.js';
@@ -30,13 +30,21 @@ export class CommentController extends BaseController {
       path: '/:offerId',
       method: HttpMethod.Get,
       handler: this.index,
-      middlewares: [new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),]
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
+      ]
     });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Post,
       handler: this.create,
-      middlewares: [new ValidateObjectIdMiddleware('offerId'), new ValidateDtoMiddleware(CreateOfferDto), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')]
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new ValidateDtoMiddleware(CreateOfferDto),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+        new PrivateRouteMiddleware(),
+      ]
     });
   }
 
@@ -47,10 +55,10 @@ export class CommentController extends BaseController {
   }
 
   public async create(
-    {body}: Request<Record<string, unknown>, Record<string, unknown>, CreateCommentDto>,
+    {body, tokenPayload}: Request<Record<string, unknown>, Record<string, unknown>, CreateCommentDto>,
     res: Response
   ): Promise<void> {
-    const comment = await this.commentService.create(body);
+    const comment = await this.commentService.create({...body, authorId: tokenPayload.id});
     this.created(res, fillDTO(CommentRdo, comment));
   }
 }
