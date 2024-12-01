@@ -2,10 +2,10 @@ import {Command} from './command.interface.js';
 import {DEFAULT_DB_PORT, DEFAULT_USER_PASSWORD} from './command.constant.js';
 import {TSVFileReader} from '../../shared/libs/file-reader/tsv-file-reader.js';
 import {createOffer, getErrorMessage, getMongoURI} from '../../shared/helpers/index.js';
-import {Offer} from '../../shared/types/index.js';
+import {AutoGenerateOffer} from '../../shared/types/index.js';
 import {DatabaseClient, MongoDatabaseClient} from '../../shared/libs/database-client/index.js';
 import {DefaultUserService, UserModel, UserService} from '../../shared/modules/user/index.js';
-import {DefaultOfferService, OfferModel, OfferService} from '../../shared/modules/offer/index.js';
+import {OfferModel, OfferService} from '../../shared/modules/offer/index.js';
 import {ConsoleLogger} from '../../shared/libs/logger/console.logger.js';
 import {Logger} from '../../shared/libs/logger/index.js';
 
@@ -21,7 +21,7 @@ export class ImportCommand implements Command {
     this.onCompleteImport = this.onCompleteImport.bind(this);
 
     this.logger = new ConsoleLogger();
-    this.offerService = new DefaultOfferService(this.logger, OfferModel);
+    this.offerService = new OfferService(this.logger, OfferModel);
     this.userService = new DefaultUserService(this.logger, UserModel);
     this.databaseClient = new MongoDatabaseClient(this.logger);
   }
@@ -37,7 +37,7 @@ export class ImportCommand implements Command {
     this.databaseClient.disconnect();
   }
 
-  private async saveOffer(offer: Offer) {
+  private async saveOffer(offer: AutoGenerateOffer) {
     const user = await this.userService.findOrCreate({
       ...offer.host,
       password: DEFAULT_USER_PASSWORD
@@ -59,6 +59,7 @@ export class ImportCommand implements Command {
       hostId: user.id,
       bedrooms: offer.bedrooms,
       maxAdults: offer.maxAdults,
+      commentsCount: 0
     });
 
   }

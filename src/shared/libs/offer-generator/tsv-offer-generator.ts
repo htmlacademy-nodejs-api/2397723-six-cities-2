@@ -1,7 +1,6 @@
 import {OfferGenerator} from './offer-generator.interface.js';
 import {MockServerData} from '../../types/index.js';
 import {
-  generateAvatarPath,
   generateImagesPaths, generatePreviewImagePath,
   generateRandomBoolean,
   generateRandomValue,
@@ -49,10 +48,8 @@ export class TSVOfferGenerator implements OfferGenerator {
     const previewImage = generatePreviewImagePath();
     const goods = getRandomItems<string>(this.mockData.goods).join(',');
     const userName = getRandomItem<string>(this.mockData.users);
-    const avatarUrl = generateAvatarPath();
     const userIsPro = generateRandomBoolean();
     const userEmail = getRandomItem<string>(this.mockData.emails);
-    const userToken = 'vdgfh';
     const bedrooms = generateRandomValue(MIN_BEDROOMS, MAX_BEDROOMS);
     const maxAdults = generateRandomValue(MIN_ADULTS, MAX_ADULTS);
 
@@ -61,8 +58,8 @@ export class TSVOfferGenerator implements OfferGenerator {
       cityLocationLatitude, cityLocationLongitude, cityLocationZoom, locationLatitude,
       locationLongitude, locationZoom, isFavorite, isPremium,
       rating, description, images, previewImage,
-      goods, userName, avatarUrl, userIsPro,
-      userEmail, userToken, bedrooms, maxAdults
+      goods, userName, userIsPro,
+      userEmail, bedrooms, maxAdults
     ].join('\t');
   }
 }
