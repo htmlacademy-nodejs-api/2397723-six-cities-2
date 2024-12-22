@@ -1,6 +1,6 @@
-import {Offer, OfferGood, OfferType, Goods} from '../types/index.js';
+import {OfferGood, OfferType, Goods, AutoGenerateOffer} from '../types/index.js';
 
-export function createOffer(offerData: string): Offer {
+export function createOffer(offerData: string): AutoGenerateOffer {
   const [
     title,
     type,
@@ -20,10 +20,8 @@ export function createOffer(offerData: string): Offer {
     previewImage,
     goods,
     userName,
-    userAvatar,
     userIsPro,
     userEmail,
-    userToken,
     bedrooms,
     maxAdults
   ] = offerData.replace('\n', '').split('\t');
@@ -45,10 +43,8 @@ export function createOffer(offerData: string): Offer {
 
   const host = {
     name: userName,
-    avatarUrl: userAvatar,
     isPro: userIsPro === 'true',
     email: userEmail,
-    token: userToken
   };
 
   return {

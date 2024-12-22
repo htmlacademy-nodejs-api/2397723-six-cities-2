@@ -8,9 +8,6 @@ export class CreateUserDto {
   @MaxLength(15, {message: CreateUserValidationMessages.name.maxLength})
   public name: string;
 
-  @IsString({message: CreateUserValidationMessages.avatarUrl.invalidFormat})
-  public avatarUrl: string;
-
   @IsBoolean({message: CreateUserValidationMessages.isPro.invalidFormat})
   public isPro: boolean;
 
